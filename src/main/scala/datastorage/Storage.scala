@@ -4,7 +4,7 @@ import java.util.UUID
 import scala.collection.mutable
 import scala.collection.mutable.HashMap
 
-class Storage extends IDocumentProcessor {
+class Storage extends IDocumentProcessor with IDocumentRecordsProcessor {
 
   private final val documentBucket = mutable.HashMap[String, Document]()
 
