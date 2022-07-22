@@ -29,7 +29,7 @@ class StorageTest extends AnyFlatSpec {
   def testCreateDocument: Assertion = {
     val testStorage: Storage = new Storage
     testStorage.createDocument(docName)
-    val doc: Document = testStorage.readDocument(docName)
+    val doc: Document = testStorage.getDocument(docName)
 
     assert(doc != null)
   }
@@ -37,7 +37,7 @@ class StorageTest extends AnyFlatSpec {
   def testReadDocument: Assertion = {
     val testStorage: Storage = new Storage
     val expectedDoc: Document = testStorage.createDocument(docName)
-    val actualDoc: Document = testStorage.readDocument(docName)
+    val actualDoc: Document = testStorage.getDocument(docName)
 
     assert(actualDoc == expectedDoc)
   }
@@ -46,25 +46,26 @@ class StorageTest extends AnyFlatSpec {
     val testStorage: Storage = new Storage
     testStorage.createDocument(docName)
 
-    val recordId: UUID = UUID.randomUUID()
-    testStorage.updateDocument(recordId, docName, recordContent)
+    val docCreated: Boolean = testStorage.getDocument(docName) != null
 
-    val actualDoc: Document = testStorage.readDocument(docName)
+    testStorage.renameDocument(docName, "new Name")
 
-    assert(actualDoc != null &&
-      actualDoc.getRecordsById(recordId) != null
-      && actualDoc.getRecordsById(recordId).equals(recordContent))
+    val docRenamed = testStorage.getDocument(docName) == null
+      && testStorage.getDocument("new Name") != null
+
+    assert(docRenamed && docCreated)
+
   }
 
   def testDeleteDocument: Assertion = {
     val testStorage: Storage = new Storage
     testStorage.createDocument(docName)
 
-    val docCreated: Boolean = testStorage.readDocument(docName) != null
+    val docCreated: Boolean = testStorage.getDocument(docName) != null
 
     val removedDocName: String = testStorage.deleteDocument(docName)
 
-    val actualDoc: Document = testStorage.readDocument(removedDocName)
+    val actualDoc: Document = testStorage.getDocument(removedDocName)
 
     assert(actualDoc == null && docCreated)
   }

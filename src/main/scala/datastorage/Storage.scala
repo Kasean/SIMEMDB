@@ -4,7 +4,7 @@ import java.util.UUID
 import scala.collection.mutable
 import scala.collection.mutable.HashMap
 
-class Storage extends ICrudDocument {
+class Storage extends IDocumentProcessor {
 
   private final val documentBucket = mutable.HashMap[String, Document]()
 
@@ -19,7 +19,7 @@ class Storage extends ICrudDocument {
     }
   }
 
-  override def readDocument(documentName: String): Document = {
+  override def getDocument(documentName: String): Document = {
     if (documentBucket.keysIterator.contains(documentName)) {
       documentBucket(documentName)
     } else {
@@ -27,14 +27,14 @@ class Storage extends ICrudDocument {
     }
   }
 
-  override def updateDocument(recordId: UUID, documentName: String, recordContent: String): Document = {
-    if (!documentBucket.keysIterator.contains(documentName)) {
-      printDocNotExistsException(documentName)
+  override def renameDocument(documentOldName: String, documentNewName: String): Document = {
+    if (!documentBucket.keysIterator.contains(documentOldName)) {
+      printDocNotExistsException(documentOldName)
       null
     } else {
-      val updatedDocument: Document = documentBucket(documentName)
-      updatedDocument.addRecordToDocument(recordId, recordContent)
-      documentBucket.put(documentName, updatedDocument)
+      val updatedDocument: Document = documentBucket(documentOldName)
+      documentBucket.put(documentNewName, updatedDocument)
+      documentBucket.remove(documentOldName)
       updatedDocument
     }
   }
