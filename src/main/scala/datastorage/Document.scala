@@ -13,7 +13,6 @@ class Document extends IRecordProcessor {
   def createRecord(id: UUID, content: String): UUID = {
     recordBucket.put(id, content)
     id
-
   }
 
   def updateRecord(id: UUID, newContent: String): UUID = {
@@ -22,7 +21,7 @@ class Document extends IRecordProcessor {
   }
 
   def getRecord(id: UUID): String = {
-    recordBucket(id)
+    recordBucket.get(id).orNull
   }
 
   def deleteRecord(id: UUID): UUID = {
