@@ -1,7 +1,0 @@
-package datastorage
-
-trait IDocumentRecordsProcessor {
-  
-  
-
-}

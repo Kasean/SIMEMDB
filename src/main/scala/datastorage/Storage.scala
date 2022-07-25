@@ -4,7 +4,7 @@ import java.util.UUID
 import scala.collection.mutable
 import scala.collection.mutable.HashMap
 
-class Storage extends IDocumentProcessor with IDocumentRecordsProcessor {
+class Storage extends IDocumentProcessor {
 
   private final val documentBucket = mutable.HashMap[String, Document]()
 
@@ -47,6 +47,35 @@ class Storage extends IDocumentProcessor with IDocumentRecordsProcessor {
       documentBucket.remove(documentName)
       documentName
     }
+  }
+
+  def createRecord(documentName: String, recordContent: String): UUID = {
+    if (documentBucket.keysIterator.contains(documentName)) {
+      val doc = documentBucket(documentName)
+      val id = UUID.randomUUID()
+      doc.createRecord(id, recordContent)
+    } else null
+  }
+
+  def updateRecord(documentName: String, recordId: UUID, recordContent: String): UUID = {
+    if (documentBucket.keysIterator.contains(documentName)) {
+      val doc = documentBucket(documentName)
+      doc.updateRecord(recordId, recordContent)
+    } else null
+  }
+
+  def getRecord(documentName: String, recordId: UUID): String = {
+    if (documentBucket.keysIterator.contains(documentName)) {
+      val doc = documentBucket(documentName)
+      doc.getRecord(recordId)
+    } else null
+  }
+
+  def deleteRecord(documentName: String, recordId: UUID): UUID = {
+    if (documentBucket.keysIterator.contains(documentName)) {
+      val doc = documentBucket(documentName)
+      doc.deleteRecord(recordId)
+    } else null
   }
 
   private def printDocExistsException(docName: String): Unit = println("Document with name: " + 
