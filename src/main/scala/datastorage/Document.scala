@@ -28,4 +28,6 @@ class Document extends IRecordProcessor {
     recordBucket.remove(id)
     id
   }
+
+  override def toString = s"Document($recordBucket)"
 }

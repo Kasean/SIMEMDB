@@ -83,4 +83,5 @@ class Storage extends IDocumentProcessor {
   private def printDocNotExistsException(docName: String): Unit = println("Document with name: " +
     docName + " not exists")
 
+  override def toString = s"Storage($documentBucket)"
 }
